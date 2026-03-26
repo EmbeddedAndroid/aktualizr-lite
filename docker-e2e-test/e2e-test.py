@@ -1339,3 +1339,51 @@ def test_fioup_daemon():
                         ('EcuInstallationCompleted', True),
                     }, False, min_events_time)
                 check_running_apps(custom_apps_list)
+                
+def run_test_no_space():
+    restore_system_state()
+    apps = None # All apps, for now
+    write_settings(apps, prune)
+
+    invoke_aklite(['check'])
+
+    # get available bytes in /var/sota
+    statvfs = os.statvfs("/var/sota")
+    available_bytes = statvfs.f_bavail * statvfs.f_frsize
+    logger.info(f"Available space in /var/sota: {available_bytes} bytes")
+    if available_bytes > 100000000:
+        assert False, "Too much free space left, test environment should be configured to have less than 10MB free space for this test to be effective"
+
+    if available_bytes > 20000:
+        # fill /var/sota with data to reduce available space to 20000 bytes, to trigger no space left error
+        with open("/var/sota/fill_space", "wb") as f:
+            f.write(b"\0" * (available_bytes - 20000))
+
+    statvfs = os.statvfs("/var/sota")
+    available_bytes = statvfs.f_bavail * statvfs.f_frsize
+    logger.info(f"Available space in /var/sota after filling it up: {available_bytes} bytes")
+
+    if single_step:
+        cmd = ['update', str(all_primary_tag_targets[Target.UpdateOstreeWithApps].actual_version)]
+        expected_success_code = ReturnCodes.InstallNeedsReboot
+    else:
+        cmd = ['pull', str(all_primary_tag_targets[Target.UpdateOstreeWithApps].actual_version)]
+        expected_success_code = ReturnCodes.Ok
+    try:
+        cp = invoke_aklite(cmd)
+        assert cp.returncode == ReturnCodes.DownloadFailureNoSpace, cp.stdout.decode("utf-8")
+    finally:
+        os.remove("/var/sota/fill_space")
+
+    cp = invoke_aklite(cmd)
+    assert cp.returncode == expected_success_code, cp.stdout.decode("utf-8")
+
+
+@pytest.mark.parametrize('single_step_', [True, False])
+@pytest.mark.parametrize('offline_', [True, False])
+def test_no_space(offline_: bool, single_step_: bool):
+    global offline, single_step
+    offline = offline_
+    single_step = single_step_
+    logger.info(f"Testing no space left on device")
+    run_test_no_space()
