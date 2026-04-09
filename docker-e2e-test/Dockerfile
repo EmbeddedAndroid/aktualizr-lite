@@ -47,6 +47,7 @@ RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/downloa
     gosu nobody true
 
 RUN  apt-get install -y python3-pytest
+RUN  apt-get install -y iproute2
 
 # Copy the entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
