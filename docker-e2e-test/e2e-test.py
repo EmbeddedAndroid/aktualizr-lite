@@ -1230,3 +1230,9 @@ def test_forced_sync():
     assert cp.returncode == ReturnCodes.Ok, cp.stdout.decode("utf-8")
     verify_file_integrity(pulled_blob_path, blob_digest.split(':')[1])
     verify_file_integrity(installed_blob_path, blob_digest.split(':')[1])
+
+# Restores the system state, useful when running commands manually inside the e2e test environment
+def test_clear_env():
+    restore_system_state()
+    apps = None # All apps, for now
+    write_settings(apps, prune)
