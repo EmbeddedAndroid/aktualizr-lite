@@ -1000,6 +1000,7 @@ done"""
 
 def restore_system_state():
     # Get to the starting point
+    global offline
     logger.info(f"Restoring base environment. Offline={offline}, SingleStep={single_step}, DelayAppsInstall={delay_app_install}, Prune={prune}...")
     if offline:
         create_offline_bundles()
@@ -1013,6 +1014,13 @@ def restore_system_state():
     version = all_primary_tag_targets[Target.First].actual_version
     cleanup_tuf_metadata()
     cleanup_installed_data()
+
+    if offline:
+        # offline bundles miss root metadata versions 1 and 2. Force a online check to get it
+        offline = False
+        cp = invoke_aklite(['check'])
+        offline = True
+
     cp = invoke_aklite(['update', str(version)])
     assert cp.returncode in [ ReturnCodes.Ok, ReturnCodes.InstallNeedsReboot ], cp.stdout.decode("utf-8")
     print(cp.stdout)
