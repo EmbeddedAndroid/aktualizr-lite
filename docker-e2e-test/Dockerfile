@@ -1,4 +1,4 @@
-FROM golang:1.22.12-bookworm AS composeapp
+FROM golang:1.24.13-bookworm AS composeapp
 # Build composeapp
 WORKDIR /build
 RUN git clone https://github.com/foundriesio/composeapp.git && cd composeapp \
@@ -14,7 +14,7 @@ RUN git clone https://github.com/foundriesio/composeapp.git && cd composeapp \
 
 WORKDIR /build
 RUN git clone https://github.com/foundriesio/fioctl.git && cd fioctl \
-    && git checkout v0.43 \
+    && git checkout v0.46 \
     && make fioctl-linux-amd64 \
     && cp ./bin/fioctl-linux-amd64 /usr/bin/fioctl
 
