@@ -84,7 +84,23 @@ jobs:
       - uses: actions/checkout@v4
       - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
       - run: git submodule update --init --recursive
+      - name: Restore cached docker-e2e-test image
+        uses: actions/cache@v4
+        with:
+          path: docker-image-cache
+          key: docker-e2e-test-${{ runner.os }}-${{ hashFiles('docker-e2e-test/**') }}
+          restore-keys: |
+            docker-e2e-test-${{ runner.os }}-
+      - name: Load cached docker-e2e-test image
+        run: |
+          if [[ -f docker-image-cache/docker-e2e-test.tar ]]; then
+            docker load -i docker-image-cache/docker-e2e-test.tar
+          fi
       - run: ./dev-shell-e2e-test.sh make -f dev-flow.mk config build
+      - name: Save docker-e2e-test image cache
+        run: |
+          mkdir -p docker-image-cache
+          docker save docker-e2e-test:latest -o docker-image-cache/docker-e2e-test.tar
       - run: ./dev-shell-e2e-test.sh pytest docker-e2e-test/e2e-test.py -k 'test_incremental_updates[False or test_update_to_latest[False'
         env:
           FACTORY: ${{ secrets.E2E_TEST_FACTORY }}
@@ -100,7 +116,23 @@ jobs:
       - uses: actions/checkout@v4
       - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
       - run: git submodule update --init --recursive
+      - name: Restore cached docker-e2e-test image
+        uses: actions/cache@v4
+        with:
+          path: docker-image-cache
+          key: docker-e2e-test-${{ runner.os }}-${{ hashFiles('docker-e2e-test/**') }}
+          restore-keys: |
+            docker-e2e-test-${{ runner.os }}-
+      - name: Load cached docker-e2e-test image
+        run: |
+          if [[ -f docker-image-cache/docker-e2e-test.tar ]]; then
+            docker load -i docker-image-cache/docker-e2e-test.tar
+          fi
       - run: ./dev-shell-e2e-test.sh make -f dev-flow.mk config build
+      - name: Save docker-e2e-test image cache
+        run: |
+          mkdir -p docker-image-cache
+          docker save docker-e2e-test:latest -o docker-image-cache/docker-e2e-test.tar
       - run: ./dev-shell-e2e-test.sh pytest docker-e2e-test/e2e-test.py -k 'test_no_space[False or test_forced_sync or test_bad_network or test_kill_process'
         env:
           FACTORY: ${{ secrets.E2E_TEST_FACTORY }}
