@@ -32,6 +32,8 @@ jobs:
 
       - name: Build with Bake
         uses: docker/bake-action@v7
+        env:
+          PWD: $GITHUB_WORKSPACE
         with:
           files: docker-compose.yml
           load: true # Loads built images into local Docker Engine for 'docker compose up'
