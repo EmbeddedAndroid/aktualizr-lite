@@ -35,6 +35,7 @@ jobs:
         with:
           files: docker-e2e-test/docker-compose.yml
           load: true # Loads built images into local Docker Engine for 'docker compose up'
+          source: docker-e2e-test
           set: |
             *.cache-from=type=gha
             *.cache-to=type=gha,mode=max
