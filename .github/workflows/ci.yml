@@ -89,7 +89,7 @@ jobs:
               --cache-from=type=gha \
               --cache-to=type=gha,mode=max \
               -t aklite-e2e-test:latest \
-              -f path/to/Dockerfile .
+              -f docker-e2e-test/Dockerfile .
 
   e2e-test:
     name: End-to-end tests
