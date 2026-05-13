@@ -22,13 +22,22 @@ jobs:
 
       - run: pwd; ls -la
 
-      - name: Build aklite-e2e-test image
-        run: |
-            DOCKER_BUILDKIT=1 docker build \
-              --cache-from=type=gha \
-              --cache-to=type=gha,mode=max \
-              -t aklite-e2e-test:latest \
-              -f docker-e2e-test/Dockerfile docker-e2e-test/
+      # - name: Build aklite-e2e-test image
+      #   run: |
+      #       DOCKER_BUILDKIT=1 docker build \
+      #         --cache-from=type=gha \
+      #         --cache-to=type=gha,mode=max \
+      #         -t aklite-e2e-test:latest \
+      #         -f docker-e2e-test/Dockerfile docker-e2e-test/
+
+      - name: Build with Bake
+        uses: docker/bake-action@v4
+        with:
+          files: docker-e2e-test/docker-compose.yml
+          load: true # Loads built images into local Docker Engine for 'docker compose up'
+          set: |
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
 
   clang:
     name: Clang Format And Tidy
