@@ -28,7 +28,7 @@ jobs:
               --cache-from=type=gha \
               --cache-to=type=gha,mode=max \
               -t aklite-e2e-test:latest \
-              -f docker-e2e-test/Dockerfile .
+              -f docker-e2e-test/Dockerfile docker-e2e-test/
 
   clang:
     name: Clang Format And Tidy
