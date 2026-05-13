@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - run: pwd; ls -la
+      - run: cp docker-e2e-test/.env.dev docker-e2e-test/.env; ls -la
 
       # - name: Build aklite-e2e-test image
       #   run: |
