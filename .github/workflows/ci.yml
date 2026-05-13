@@ -33,7 +33,7 @@ jobs:
       - name: Build with Bake
         uses: docker/bake-action@v7
         with:
-          files: docker-e2e-test/docker-compose.yml
+          files: docker-compose.yml
           load: true # Loads built images into local Docker Engine for 'docker compose up'
           source: docker-e2e-test
           set: |
