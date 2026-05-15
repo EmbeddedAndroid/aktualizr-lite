@@ -99,6 +99,11 @@ jobs:
           else
             echo "AKLITE_E2E_IMAGE=ghcr.io/${{ github.repository }}/aklite-e2e-test:master" >> $GITHUB_ENV
           fi
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ runner.os }}-ccache  # Unique key for your cache
+          max-size: "500M"             # Optional: set max cache size
       - run: ./dev-shell-e2e-test.sh make -f dev-flow.mk config build
         env:
           AKLITE_E2E_IMAGE: ${{ env.AKLITE_E2E_IMAGE }}
