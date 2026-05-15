@@ -2,6 +2,7 @@ name: Build and push aklite-e2e-test image
 
 on:
   workflow_dispatch:
+  push:
 
 permissions:
   contents: read
@@ -19,7 +20,7 @@ jobs:
       - name: Compute branch-safe image tag
         id: tag
         run: |
-          SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
+          SAFE_BRANCH="master"
           echo "image=ghcr.io/${{ github.repository }}/aklite-e2e-test:${SAFE_BRANCH}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Container Registry
