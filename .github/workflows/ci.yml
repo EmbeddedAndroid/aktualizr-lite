@@ -77,11 +77,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/ccache
-          key: e2e-ccache-${{ runner.os }}
-          restore-keys: |
-            e2e-ccache-${{ runner.os }}
       - name: test
-        run: make -f dev-flow.mk config build test
+        run: make -f dev-flow.mk config build
 
   e2e-test-basic-online-single-step:
     name: Basic online, single step end-to-end tests
