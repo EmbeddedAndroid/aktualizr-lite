@@ -113,6 +113,8 @@ jobs:
     name: Basic online, single step end-to-end tests
     needs: fill-up-ccache
     runs-on: ubuntu-latest
+    env:
+      CCACHE_DIR: /__w/aktualizr-lite/aktualizr-lite/.ccache
 
     steps:
       - uses: actions/checkout@v4
