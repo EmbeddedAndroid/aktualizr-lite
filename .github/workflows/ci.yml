@@ -111,7 +111,6 @@ jobs:
 
   e2e-test-basic-online-single-step:
     name: Basic online, single step end-to-end tests
-    needs: fill-up-ccache
     runs-on: ubuntu-latest
     env:
       CXX: clang++
