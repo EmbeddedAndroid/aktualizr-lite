@@ -20,7 +20,6 @@ jobs:
       env:
         CXX: clang++
         CC: clang
-        CCACHE_DIR: /tmp/ccache
 
     steps:
       - uses: actions/checkout@v3
@@ -32,6 +31,31 @@ jobs:
         run: make -f dev-flow.mk format
       - name: tidy
         run: make -f dev-flow.mk tidy
+
+
+  fill-up-ccache:
+    name: Fill up ccache
+    runs-on: ubuntu-latest
+    container:
+      image: foundries/aklite-dev
+      env:
+        CXX: clang++
+        CC: clang
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
+      - run: git submodule update --init --recursive
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: /__w/aktualizr-lite/aktualizr-lite/.ccache
+          key: e2e-ccache-${{ runner.os }}
+          restore-keys: |
+            e2e-ccache-${{ runner.os }}
+      - name: build
+        run: make -f dev-flow.mk config build
+
 
   garage-tools:
     name: Build Garage Tools
@@ -62,18 +86,17 @@ jobs:
 
   test:
     name: Tests
+    needs: fill-up-ccache
     runs-on: ubuntu-latest
     container:
       image: foundries/aklite-dev
       env:
         CXX: clang++
         CC: clang
-        CCACHE_DIR: /__w/aktualizr-lite/aktualizr-lite/.ccache
     steps:
       - uses: actions/checkout@v3
       - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
       - run: git submodule update --init --recursive
-      - run: mkdir -p /tmp/ccache
       - name: Restore ccache
         uses: actions/cache@v4
         with:
@@ -82,16 +105,24 @@ jobs:
           restore-keys: |
             e2e-ccache-${{ runner.os }}
       - name: test
-        run: make -f dev-flow.mk config build
+        run: make -f dev-flow.mk config build test
 
   e2e-test-basic-online-single-step:
     name: Basic online, single step end-to-end tests
+    needs: fill-up-ccache
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
       - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
       - run: git submodule update --init --recursive
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: /__w/aktualizr-lite/aktualizr-lite/.ccache
+          key: e2e-ccache-${{ runner.os }}
+          restore-keys: |
+            e2e-ccache-${{ runner.os }}
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
