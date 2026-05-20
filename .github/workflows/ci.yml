@@ -124,6 +124,10 @@ jobs:
       
       - name: Restore ccache
         uses: actions/cache@v4
+        env:
+          CXX: clang++
+          CC: clang
+          CCACHE_DIR: /__w/aktualizr-lite/aktualizr-lite/.ccache
         with:
           path: /__w/aktualizr-lite/aktualizr-lite/.ccache
           key: e2e-ccache
