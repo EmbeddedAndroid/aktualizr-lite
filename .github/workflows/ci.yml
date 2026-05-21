@@ -166,6 +166,7 @@ jobs:
   e2e-test-basic-online-granular-steps:
     name: Basic online, granular steps end-to-end tests
     runs-on: ubuntu-latest
+    needs: fill-up-ccache
     env:
       CXX: clang++
       CC: clang
