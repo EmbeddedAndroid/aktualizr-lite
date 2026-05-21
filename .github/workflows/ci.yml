@@ -167,6 +167,8 @@ jobs:
     name: Basic online, granular steps end-to-end tests
     runs-on: ubuntu-latest
     env:
+      CXX: clang++
+      CC: clang
       CCACHE_DIR: ${{ github.workspace }}/.ccache
     steps:
       - uses: actions/checkout@v4
