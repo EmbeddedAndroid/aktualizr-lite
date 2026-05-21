@@ -112,10 +112,10 @@ jobs:
   e2e-test-basic-online-single-step:
     name: Basic online, single step end-to-end tests
     runs-on: ubuntu-latest
-    # env:
-    #   CXX: clang++
-    #   CC: clang
-    #   CCACHE_DIR: /__w/aktualizr-lite/aktualizr-lite/.ccache
+    env:
+      CXX: clang++
+      CC: clang
+      # CCACHE_DIR: $PWD/.ccache
 
     steps:
       - uses: actions/checkout@v4
