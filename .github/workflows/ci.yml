@@ -41,16 +41,16 @@ jobs:
       env:
         CXX: clang++
         CC: clang
-        CCACHE_DIR: ${{ github.workspace }}/.ccache
+        CCACHE_DIR: /__w/aktualizr-lite/aktualizr-lite/.ccache
 
     steps:
       - uses: actions/checkout@v4
-      - run: git config --global --add safe.directory ${{ github.workspace }}
+      - run: git config --global --add safe.directory /__w/aktualizr-lite/aktualizr-lite
       - run: git submodule update --init --recursive
       - name: Restore ccache
         uses: actions/cache@v4
         with:
-          path: ${{ github.workspace }}/.ccache
+          path: /__w/aktualizr-lite/aktualizr-lite/.ccache
           key: e2e-ccache
           restore-keys: |
             e2e-ccache
