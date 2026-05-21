@@ -74,7 +74,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: e2e-ccache-{{ github.commit.sha }}
+          key: e2e-ccache-${{ github.sha }}
           restore-keys: |
             e2e-ccache-
 
