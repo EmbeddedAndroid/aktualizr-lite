@@ -74,9 +74,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: e2e-ccache
+          key: e2e-ccache-{{ github.commit.sha }}
           restore-keys: |
-            e2e-ccache
+            e2e-ccache-
 
       - name: Check if image exists # Fallback to master image if branch-specific image doesn't exist
         id: check_image
