@@ -33,7 +33,7 @@ jobs:
         run: make -f dev-flow.mk tidy
 
   refresh-ccache-dev:
-    name: Refresh ccache
+    name: Refresh ccache for development environment
     runs-on: ubuntu-latest
     container:
       image: foundries/aklite-dev
@@ -164,9 +164,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: dev-ccache-${{ github.sha }}
+          key: e2e-ccache-${{ github.sha }}
           restore-keys: |
-            dev-ccache-
+            e2e-ccache-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
